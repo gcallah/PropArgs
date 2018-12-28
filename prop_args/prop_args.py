@@ -5,17 +5,10 @@ Set, read, and write program-wide properties in one location. Includes logging.
 import logging
 import sys
 import platform
-import networkx as nx
 import json
 import os
-from django.core.exceptions import ObjectDoesNotExist
-
-from IndrasNet.models import ABMModel
 
 SWITCH = '-'
-PERIODS = 'periods'
-BASE_DIR = 'base_dir'
-DATAFILE = 'datafile'
 
 OS = "OS"
 
@@ -37,11 +30,12 @@ LOWVAL = "lowval"
 global user_type
 user_type = TERMINAL
 
+BOOL = 'BOOL'
 INT = 'INT'
 FLT = 'DBL'
-BOOL = 'BOOL'
 STR = 'STR'
-type_dict = {INT: int, FLT: float, BOOL: bool, STR: str}
+CMPLX = 'CMPLX'
+type_dict = {BOOL: bool, INT: int, FLT: float, CMPLX: complex, STR: str}
 
 
 def get_prop_from_env():
@@ -63,12 +57,12 @@ def read_props(model_nm, file_nm):
     return PropArgs.create_props(model_nm, props)
 
 
-class Prop():
+class Prop:
     """
     Container for prop attributes.
 
     Attributes include:
-        val - the value to be used in the model run
+        val - the value of the prop
         question - a question prompt for the user's input for the prop value
         atype - the user's answer type (INT, DBL, BOOL, STR, etc.)
         default_val - the property's default value
@@ -97,7 +91,7 @@ class Prop():
         return str(self.val)
 
 
-class PropArgs():
+class PropArgs:
     """
     This class holds named properties for program-wide values.
     It enables getting properties from a file, a database,
@@ -105,32 +99,31 @@ class PropArgs():
     """
 
     @staticmethod
-    def create_props(model_nm, prop_dict=None):
+    def create_props(name, prop_dict=None):
         """
         Create a property object with values in 'props'.
         """
         if prop_dict is None:
             prop_dict = {}
-        return PropArgs(model_nm, prop_dict=prop_dict)
+        return PropArgs(name, prop_dict=prop_dict)
 
 
-    def __init__(self, model_nm, logfile=None, prop_dict=None,
+    def __init__(self, name, logfile=None, prop_dict=None,
                  loglevel=logging.INFO):
         """
         Loads and sets properties in the following order:
-        1. The Database
+        1. The Database (Not Implemented)
         2. The User's Environment (operating system, dev/prod settings, etc.)
         3. Property File
         4. Command Line
         5. Questions Prompts During Run-Time
         """
+        self.name = name
         self.logfile = logfile
-        self.model_nm = model_nm
-        self.graph = nx.Graph()
         self.props = {}
 
         # 1. The Database
-        self.set_props_from_db()
+        # self.set_props_from_db()
 
         # 2. The Environment
         self.overwrite_props_from_env()
@@ -145,28 +138,10 @@ class PropArgs():
             # 5. Ask the user questions.
             self.overwrite_props_from_user()
 
-        elif self.props[UTYPE].val == WEB:
-            self.props[PERIODS] = Prop(val=1)
-            self.props[BASE_DIR] = Prop(val=os.environ[BASE_DIR])
-
-        self.logger = Logger(self, model_name=model_nm, logfile=logfile)
-        self.graph.add_edge(self, self.logger)
+        self.logger = Logger(self, name=name, logfile=logfile)
 
     def set_props_from_db(self):
-        try:
-            params = ABMModel.objects.get(name=self.model_nm).params.all()
-            for param in params:
-                atype = param.atype
-                typed_default_val = self._type_val_if_possible(param.default_val,
-                                                               param.atype)
-                self.props[param.prop_name] = Prop(val=typed_default_val,
-                                                   question=param.question,
-                                                   atype=atype,
-                                                   default_val=typed_default_val,
-                                                   lowval=param.lowval,
-                                                   hival=param.hival)
-        except ObjectDoesNotExist:
-            print("ABMModel not found in db: " + self.model_nm)
+        raise NotImplementedError
 
     def overwrite_props_from_env(self):
         global user_type
@@ -202,6 +177,7 @@ class PropArgs():
 
         """
         for prop_nm in prop_dict:
+            # General Dict:
             if type(prop_dict[prop_nm]) is dict:
                 atype = prop_dict[prop_nm].get(ATYPE, None)
                 val = self._type_val_if_possible(prop_dict[prop_nm].get(VALUE,
@@ -213,6 +189,7 @@ class PropArgs():
                 lowval = prop_dict[prop_nm].get(LOWVAL, None)
                 self.props[prop_nm] = Prop(val=val, question=question, atype=atype, default_val=default_val,
                                            hival=hival, lowval=lowval)
+            # Simple Dict:
             else:
                 self[prop_nm] = prop_dict[prop_nm]
 
@@ -231,7 +208,7 @@ class PropArgs():
         for prop_nm in self:
             if (hasattr(self.props[prop_nm], QUESTION)
                 and self.props[prop_nm].question):
-                self.props[prop_nm].val = self._keep_asking_until_correct(prop_nm)
+                self.props[prop_nm].val = self._ask_until_correct(prop_nm)
     
     @staticmethod
     def _type_val_if_possible(val, atype):
@@ -241,7 +218,7 @@ class PropArgs():
         else:
             return val
 
-    def _keep_asking_until_correct(self, prop_nm):
+    def _ask_until_correct(self, prop_nm):
         atype = None
         if hasattr(self.props[prop_nm], ATYPE):
             atype = self.props[prop_nm].atype
@@ -285,7 +262,7 @@ class PropArgs():
         """
         How to represent the properties on screen.
         """
-        ret = "Properties for " + self.model_nm + "\n"
+        ret = "Properties in " + self.name + "\n"
         for prop_nm in self:
             ret += "\t" + prop_nm + ": " + str(self.props[prop_nm].val) + "\n"
 
@@ -355,7 +332,7 @@ class PropArgs():
                            default=self.props[prop_nm].val)
 
 
-class Logger():
+class Logger:
     """
     A class to track how we are logging.
     """
@@ -365,10 +342,10 @@ class Logger():
     DEF_FILEMODE = 'w'
     # DEF_FILENAME = 'log.txt'
 
-    def __init__(self, props, model_name, logfile=None,
+    def __init__(self, props, name, logfile=None,
                  loglevel=logging.INFO):
         if logfile is None:
-            logfile = model_name + ".log"
+            logfile = name + ".log"
         fmt = props["log_format"] if "log_format" in props else Logger.DEF_FORMAT
         lvl = props["log_level"] if "log_level" in props else Logger.DEF_LEVEL
         fmd = props["log_fmode"] if "log_fmode" in props else Logger.DEF_FILEMODE
