@@ -10,16 +10,15 @@ from unittest.mock import patch
 
 from prop_args import prop_args as pa
 
-DUMMY_PROP_NM = "num_agents"
-ANSWERS_FOR_INPUT_PROMPTS = [10]
+DUMMY_PROP_NM = "dummy_prop"
+ANSWERS_FOR_INPUT_PROMPTS = [1]
 
 @pytest.fixture
 def prop_args():
     """
     A bare-bones prop_args object. To use - make `prop_args` a test argument.
     """
-    with patch('builtins.input', side_effect=ANSWERS_FOR_INPUT_PROMPTS):
-        return pa.PropArgs.create_props("test_pa", prop_dict=None)
+    return pa.PropArgs.create_props("test_pa", prop_dict=None)
 
 
 @pytest.mark.parametrize('lowval, test_val, hival, expected', [
@@ -48,3 +47,13 @@ def test_props_overwriting_through_prop_file(prop_args):
 
     assert prop_args[DUMMY_PROP_NM] == 7
 
+
+def test_user_input(prop_args):
+    prop_args.props[DUMMY_PROP_NM] = pa.Prop(atype=pa.INT,
+                                             question="Enter Integer: ",
+                                             val=0)
+
+    with patch('builtins.input', side_effect=ANSWERS_FOR_INPUT_PROMPTS):
+        prop_args.overwrite_props_from_user()
+
+    assert prop_args[DUMMY_PROP_NM] == ANSWERS_FOR_INPUT_PROMPTS[0]
