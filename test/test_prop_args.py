@@ -13,6 +13,7 @@ from prop_args import prop_args as pa
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
 
+
 @pytest.fixture
 def prop_args():
     """
@@ -48,10 +49,21 @@ def test_props_overwriting_through_prop_file(prop_args):
     assert prop_args[DUMMY_PROP_NM] == 7
 
 
+def test_prop_overwrite_from_cl(prop_args):
+    prop_args.props[DUMMY_PROP_NM] = pa.Prop(atype=pa.INT,
+                                             val=-1)
+
+    with patch('sys.argv', ['-{}'.format(DUMMY_PROP_NM),
+                            '7']):
+        prop_args.overwrite_props_from_cl()
+
+    assert prop_args[DUMMY_PROP_NM] == 7
+
+
 def test_user_input(prop_args):
     prop_args.props[DUMMY_PROP_NM] = pa.Prop(atype=pa.INT,
                                              question="Enter Integer: ",
-                                             val=0)
+                                             val=-1)
 
     with patch('builtins.input', side_effect=ANSWERS_FOR_INPUT_PROMPTS):
         prop_args.overwrite_props_from_user()
