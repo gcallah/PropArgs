@@ -160,7 +160,7 @@ class PropArgs:
         """
         for prop_nm in prop_dict:
             val = prop_dict[prop_nm]
-            val = self._type_val_if_possible(val, self.props[prop_nm].atype)
+            val = self._try_type_val(val, self.props[prop_nm].atype)
             self[prop_nm] = val
 
     def overwrite_props_from_cl(self):
@@ -172,7 +172,7 @@ class PropArgs:
             # the second arg is the property value (which we try to cast to the proper type)
             elif prop_nm is not None:
                 if prop_nm in self:
-                    arg = self._type_val_if_possible(arg, self.props[prop_nm].atype)
+                    arg = self._try_type_val(arg, self.props[prop_nm].atype)
                     self[prop_nm] = arg
                     prop_nm = None
 
@@ -183,7 +183,7 @@ class PropArgs:
                 self.props[prop_nm].val = self._ask_until_correct(prop_nm)
     
     @staticmethod
-    def _type_val_if_possible(val, atype):
+    def _try_type_val(val, atype):
         if atype in type_dict:
             type_cast = type_dict[atype]
             return type_cast(val)
@@ -201,7 +201,7 @@ class PropArgs:
                 return self.props[prop_nm].val
 
             try:
-                typed_answer = self._type_val_if_possible(answer, atype)
+                typed_answer = self._try_type_val(answer, atype)
             except ValueError:
                 print("Input of invalid type. Should be {atype}"
                       .format(atype=atype))
