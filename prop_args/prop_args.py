@@ -104,9 +104,8 @@ class PropArgs:
         Create a property object with values in 'props'.
         """
         if prop_dict is None:
-            prop_dict = {}
+            prop_dict = dict()
         return PropArgs(name, prop_dict=prop_dict)
-
 
     def __init__(self, name, logfile=None, prop_dict=None,
                  loglevel=logging.INFO):
@@ -120,7 +119,7 @@ class PropArgs:
         """
         self.name = name
         self.logfile = logfile
-        self.props = {}
+        self.props = prop_dict or dict()
 
         # 1. The Database
         # self.set_props_from_db()
@@ -151,47 +150,18 @@ class PropArgs:
 
     def overwrite_props_from_dict(self, prop_dict):
         """
-        General Dict:
+        Dict Example:
 
             {
-                prop_name:
-                    {
-                        val: <something>,
-                        question: <something>,
-                        atype: <something>,
-                    }
-                prop_name:
-                    {
-                        val: <something>,
-                        hival: <something>,
-                        lowval: <something>,
-                    }
-            }
-
-        Simple Dict:
-
-            {
-                prop_name: val,
-                prop_name: val
+                prop_name_1: val_1,
+                prop_name_2: val_2
             }
 
         """
         for prop_nm in prop_dict:
-            # General Dict:
-            if type(prop_dict[prop_nm]) is dict:
-                atype = prop_dict[prop_nm].get(ATYPE, None)
-                val = self._type_val_if_possible(prop_dict[prop_nm].get(VALUE,
-                                                                        None),
-                                                 atype)
-                question = prop_dict[prop_nm].get(QUESTION, None)
-                default_val = prop_dict[prop_nm].get(DEFAULT_VAL, None)
-                hival = prop_dict[prop_nm].get(HIVAL, None)
-                lowval = prop_dict[prop_nm].get(LOWVAL, None)
-                self.props[prop_nm] = Prop(val=val, question=question, atype=atype, default_val=default_val,
-                                           hival=hival, lowval=lowval)
-            # Simple Dict:
-            else:
-                self[prop_nm] = prop_dict[prop_nm]
+            val = prop_dict[prop_nm]
+            val = self._type_val_if_possible(val, self.props[prop_nm].atype)
+            self[prop_nm] = val
 
     def overwrite_props_from_cl(self):
         prop_nm = None
@@ -199,10 +169,12 @@ class PropArgs:
             # the first arg (-prop) names the property
             if arg.startswith(SWITCH):
                 prop_nm = arg.lstrip(SWITCH)
-            # the second arg is the property value
-            if prop_nm is not None:
-                self.props[prop_nm].val = arg
-                prop_nm = None
+            # the second arg is the property value (which we try to cast to the proper type)
+            elif prop_nm is not None:
+                if prop_nm in self:
+                    arg = self._type_val_if_possible(arg, self.props[prop_nm].atype)
+                    self[prop_nm] = arg
+                    prop_nm = None
 
     def overwrite_props_from_user(self):
         for prop_nm in self:

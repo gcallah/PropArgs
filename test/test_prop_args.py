@@ -41,7 +41,7 @@ def test_int_bounds(lowval, test_val, hival, expected, prop_args):
 
 
 def test_props_overwriting_through_prop_file(prop_args):
-    prop_json = "{{ \"{prop_name}\": {{\"val\": 7}} }}".format(prop_name=DUMMY_PROP_NM)
+    prop_json = "{{ \"{prop_name}\": 7 }}".format(prop_name=DUMMY_PROP_NM)
     prop_dict = json.loads(prop_json)
     prop_args[DUMMY_PROP_NM] = 100
     prop_args.overwrite_props_from_dict(prop_dict)
