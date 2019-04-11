@@ -53,7 +53,8 @@ Note that any given property need not have all metadata fields defined in the js
 
 
 #### Environment
-PropArgs will read and add all the environment variables in program in which PropArgs is initialized.
+PropArgs will read and add all the environment variables in program in which PropArgs is initialized. (i.e. everything
+in os.environ)
 
 
 #### Property File
@@ -67,7 +68,7 @@ Currently the only Property File type supported is JSON. The formatting is as fo
 
 
 #### Command Line
-Properties are defined through the command line through PyArgs formatting.
+Properties are defined through the command line through pyargs formatting. (more details to come)
 
 #### User
 The final stage is to ask the user questions for properties that have them. (i.e. the "question" field is nonnull) The
