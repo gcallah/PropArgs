@@ -68,7 +68,7 @@ Currently the only Property File type supported is JSON. The formatting is as fo
 
 
 #### Command Line
-Properties are defined through the command line through pyargs formatting. (more details to come)
+Properties are read in the command line with python's argporse. (more details to come)
 
 #### User
 The final stage is to ask the user questions for properties that have them. (i.e. the "question" field is nonnull) The
