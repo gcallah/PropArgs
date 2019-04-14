@@ -108,11 +108,11 @@ questions.
     >>> pa.get_questions()
     {
         "prop_name_1": {
-            "val": 2.00,
+            "val": 2.0,
             "question": "",
             "atype": "dbl",
-            "hival": "<something>",
-            "loval": "<something>"
+            "hival": 10.0,
+            "loval": -0.5
         },
         "prop_name_2": {
             "val": "default",
