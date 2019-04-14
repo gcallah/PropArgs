@@ -51,7 +51,7 @@ The JSON formatting is as follows:
         },
         "prop_name_2": {
             "val": "Hello World."
-        }
+        },
         "prop_name_3": {
         }
     }
