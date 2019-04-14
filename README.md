@@ -58,6 +58,8 @@ The JSON formatting is as follows:
 
 Note that a property need not have all (or any) fields defined. If no "val" is specified, it defaults to `None`.
 
+Details on database data stores to come ...
+
 
 #### Environment
 PropArgs will read and add all the environment variables of the program in which PropArgs is initialized.
