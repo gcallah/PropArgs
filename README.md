@@ -94,7 +94,7 @@ Properties will be read from the command line as follows
     $ python program_reading_props.py --props prop_1=val_1,prop_2=val_2,prop_3=val_3  #etc...
 
 #### User
-The final stage is to ask the user for input. The user will be prompted about only properties that have a question.
+The final stage is to ask the user for input. The user will only be prompted about properties that have a question.
 
 The default behavior is to prompt questions in the client's command line:
 
