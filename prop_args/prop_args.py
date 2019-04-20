@@ -8,6 +8,8 @@ import platform
 import json
 import os
 
+from prop_args import data_store
+
 SWITCH = '-'
 
 OS = "OS"
@@ -22,7 +24,6 @@ DUMMY = "dummy"
 
 VALUE = "val"
 QUESTION = "question"
-DEFAULT_VAL = "default_val"
 ATYPE = "atype"
 HIVAL = "hival"
 LOWVAL = "lowval"
@@ -65,17 +66,15 @@ class Prop:
         val - the value of the prop
         question - a question prompt for the user's input for the prop value
         atype - the user's answer type (INT, DBL, BOOL, STR, etc.)
-        default_val - the property's default value
         lowval - the lowest value val can take on
         hival - the highest value val can take on
     """
 
-    def __init__(self, val=None, question=None, atype=None, default_val=None,
-                        lowval=None, hival=None):
+    def __init__(self, val=None, question=None, atype=None,
+                 lowval=None, hival=None):
         self.val = val
         self.question = question
         self.atype = atype
-        self.default_val = default_val
         self.lowval = lowval
         self.hival = hival
 
@@ -83,7 +82,6 @@ class Prop:
         return {"val": self.val,
                 "question": self.question,
                 "atype": self.atype,
-                "default_val": self.default_val,
                 "lowval": self.lowval,
                 "hival": self.hival}
 
@@ -99,15 +97,15 @@ class PropArgs:
     """
 
     @staticmethod
-    def create_props(name, prop_dict=None):
+    def create_props(name, ds_file=None, prop_dict=None):
         """
         Create a property object with values in 'props'.
         """
         if prop_dict is None:
             prop_dict = dict()
-        return PropArgs(name, prop_dict=prop_dict)
+        return PropArgs(name, ds_file=ds_file, prop_dict=prop_dict)
 
-    def __init__(self, name, logfile=None, prop_dict=None,
+    def __init__(self, name, logfile=None, ds_file=None, prop_dict=None,
                  loglevel=logging.INFO):
         """
         Loads and sets properties in the following order:
@@ -119,10 +117,11 @@ class PropArgs:
         """
         self.name = name
         self.logfile = logfile
+        self.ds_file = ds_file
         self.props = prop_dict or dict()
 
-        # 1. The Database
-        # self.set_props_from_db()
+        # 1. The Data Store
+        data_store.set_props_from_ds(self)
 
         # 2. The Environment
         self.overwrite_props_from_env()
@@ -139,8 +138,6 @@ class PropArgs:
 
         self.logger = Logger(self, name=name, logfile=logfile)
 
-    def set_props_from_db(self):
-        raise NotImplementedError
 
     def overwrite_props_from_env(self):
         global user_type
@@ -152,16 +149,28 @@ class PropArgs:
         """
         Dict Example:
 
-            {
-                prop_name_1: val_1,
-                prop_name_2: val_2
+        {
+            "prop_name_1": {
+                "val": 1,
+                "question": "What value should this property have?",
+                "atype": "int",
+                "hival": 10,
+                "lowval": 0
+            },
+            "prop_name_2": {
+                "val": "Hello World."
             }
-
+        }
         """
         for prop_nm in prop_dict:
-            val = prop_dict[prop_nm]
-            val = self._try_type_val(val, self.props[prop_nm].atype)
-            self[prop_nm] = val
+            atype = prop_dict[prop_nm].get(ATYPE, None)
+            val = self._try_type_val(prop_dict[prop_nm].get(VALUE, None),
+                                     atype)
+            question = prop_dict[prop_nm].get(QUESTION, None)
+            hival = prop_dict[prop_nm].get(HIVAL, None)
+            lowval = prop_dict[prop_nm].get(LOWVAL, None)
+            self.props[prop_nm] = Prop(val=val, question=question, atype=atype,
+                                       hival=hival, lowval=lowval)
 
     def overwrite_props_from_cl(self):
         prop_nm = None

@@ -4,11 +4,13 @@ This is a simple test script. It can be cloned to
 create new run scripts, and should be run to test
 the system after library changes.
 """
+from unittest import mock
+
 import pytest
 import json
 from unittest.mock import patch
 
-from prop_args import prop_args as pa
+from prop_args import prop_args as pa, data_store
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -19,7 +21,7 @@ def prop_args():
     """
     A bare-bones prop_args object. To use - make `prop_args` a test argument.
     """
-    return pa.PropArgs.create_props("test_pa", prop_dict=None)
+    return pa.PropArgs.create_props("test_pa", ds_file=None, prop_dict=None)
 
 
 @pytest.mark.parametrize('lowval, test_val, hival, expected', [
@@ -40,8 +42,16 @@ def test_int_bounds(lowval, test_val, hival, expected, prop_args):
            == expected
 
 
+def test_ds_store(prop_args):
+    with mock.patch('prop_args.data_store._open_file_as_json') as mock_open_file_as_json:
+        mock_open_file_as_json.return_value = json.loads('{{ "{prop_name}": {{"val": 7}} }}'.format(prop_name=DUMMY_PROP_NM))
+        prop_args.ds_file = "some_file"
+        data_store.set_props_from_ds(prop_args)
+        assert prop_args[DUMMY_PROP_NM] == 7
+
+
 def test_props_overwriting_through_prop_file(prop_args):
-    prop_json = "{{ \"{prop_name}\": 7 }}".format(prop_name=DUMMY_PROP_NM)
+    prop_json = '{{ "{prop_name}": {{"val": 7}} }}'.format(prop_name=DUMMY_PROP_NM)
     prop_dict = json.loads(prop_json)
     prop_args[DUMMY_PROP_NM] = 100
     prop_args.overwrite_props_from_dict(prop_dict)
