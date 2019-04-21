@@ -4,58 +4,10 @@ Set, read, and write program-wide properties in one location. Includes logging.
 """
 import logging
 import sys
-import platform
 import json
-import os
 
-from prop_args import data_store
-
-SWITCH = '-'
-
-OS = "OS"
-
-UTYPE = "user_type"
-# user types (DUMMY type is only for automated test)
-TERMINAL = "terminal"
-IPYTHON = "iPython"
-IPYTHON_NB = "iPython Notebook"
-WEB = "Web browser"
-DUMMY = "dummy"
-
-VALUE = "val"
-QUESTION = "question"
-ATYPE = "atype"
-HIVAL = "hival"
-LOWVAL = "lowval"
-
-global user_type
-user_type = TERMINAL
-
-BOOL = 'BOOL'
-INT = 'INT'
-FLT = 'DBL'
-STR = 'STR'
-CMPLX = 'CMPLX'
-type_dict = {BOOL: bool, INT: int, FLT: float, CMPLX: complex, STR: str}
-
-
-def get_prop_from_env():
-    global user_type
-    try:
-        user_type = os.environ[UTYPE]
-    except KeyError:
-# this can't be done before logging is set up!
-#        logging.info("Environment variable user type not found")
-        user_type = TERMINAL
-    return user_type
-
-
-def read_props(model_nm, file_nm):
-    """
-    Create a new PropArgs object from a json file
-    """
-    props = json.load(open(file_nm))
-    return PropArgs.create_props(model_nm, props)
+from prop_args import data_store, env
+from prop_args.constants import *
 
 
 class Prop:
@@ -124,26 +76,20 @@ class PropArgs:
         data_store.set_props_from_ds(self)
 
         # 2. The Environment
-        self.overwrite_props_from_env()
+        env.overwrite_props_from_env(self)
 
         # 3. Property File
         self.overwrite_props_from_dict(prop_dict)
 
-        if self.props[UTYPE].val in (TERMINAL, IPYTHON, IPYTHON_NB):
-            # 4. process command line args and set them as properties:
-            self.overwrite_props_from_cl()
+        # 4. process command line args and set them as properties:
+        self.overwrite_props_from_cl()
+
+        if UTYPE in self.props and self.props[UTYPE].val in (TERMINAL, IPYTHON, IPYTHON_NB):
 
             # 5. Ask the user questions.
             self.overwrite_props_from_user()
 
         self.logger = Logger(self, name=name, logfile=logfile)
-
-
-    def overwrite_props_from_env(self):
-        global user_type
-        user_type = get_prop_from_env()
-        self.props[UTYPE] = Prop(val=user_type)
-        self.props[OS] = Prop(val=platform.system())
 
     def overwrite_props_from_dict(self, prop_dict):
         """

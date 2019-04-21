@@ -4,13 +4,14 @@ This is a simple test script. It can be cloned to
 create new run scripts, and should be run to test
 the system after library changes.
 """
+import os
 from unittest import mock
 
 import pytest
 import json
 from unittest.mock import patch
 
-from prop_args import prop_args as pa, data_store
+from prop_args import prop_args as pa, data_store, env
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -48,6 +49,19 @@ def test_ds_store(prop_args):
         prop_args.ds_file = "some_file"
         data_store.set_props_from_ds(prop_args)
         assert prop_args[DUMMY_PROP_NM] == 7
+
+
+def test_env(prop_args):
+    with mock.patch.dict(os.environ,{"hello": "world"}):
+        env.overwrite_props_from_env(prop_args)
+        assert prop_args["hello"] == "world"
+
+
+def test_env_os(prop_args):
+    with mock.patch('platform.system') as mock_platform_system:
+        mock_platform_system.return_value = 'Mac'
+        env.overwrite_props_from_env(prop_args)
+        assert prop_args['OS'] == 'Mac'
 
 
 def test_props_overwriting_through_prop_file(prop_args):
