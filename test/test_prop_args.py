@@ -11,7 +11,7 @@ import pytest
 import json
 from unittest.mock import patch
 
-from prop_args import prop_args as pa, data_store, env
+from prop_args import prop_args as pa, data_store, env, property_file
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -68,7 +68,7 @@ def test_props_overwriting_through_prop_file(prop_args):
     prop_json = '{{ "{prop_name}": {{"val": 7}} }}'.format(prop_name=DUMMY_PROP_NM)
     prop_dict = json.loads(prop_json)
     prop_args[DUMMY_PROP_NM] = 100
-    prop_args.overwrite_props_from_dict(prop_dict)
+    property_file.overwrite_props_from_dict(prop_args, prop_dict)
 
     assert prop_args[DUMMY_PROP_NM] == 7
 

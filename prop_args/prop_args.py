@@ -6,7 +6,7 @@ import logging
 import sys
 import json
 
-from prop_args import data_store, env
+from prop_args import data_store, env, property_file
 from prop_args.constants import *
 
 
@@ -79,7 +79,7 @@ class PropArgs:
         env.overwrite_props_from_env(self)
 
         # 3. Property File
-        self.overwrite_props_from_dict(prop_dict)
+        property_file.overwrite_props_from_dict(self, prop_dict)
 
         # 4. process command line args and set them as properties:
         self.overwrite_props_from_cl()
@@ -90,33 +90,6 @@ class PropArgs:
             self.overwrite_props_from_user()
 
         self.logger = Logger(self, name=name, logfile=logfile)
-
-    def overwrite_props_from_dict(self, prop_dict):
-        """
-        Dict Example:
-
-        {
-            "prop_name_1": {
-                "val": 1,
-                "question": "What value should this property have?",
-                "atype": "int",
-                "hival": 10,
-                "lowval": 0
-            },
-            "prop_name_2": {
-                "val": "Hello World."
-            }
-        }
-        """
-        for prop_nm in prop_dict:
-            atype = prop_dict[prop_nm].get(ATYPE, None)
-            val = self._try_type_val(prop_dict[prop_nm].get(VALUE, None),
-                                     atype)
-            question = prop_dict[prop_nm].get(QUESTION, None)
-            hival = prop_dict[prop_nm].get(HIVAL, None)
-            lowval = prop_dict[prop_nm].get(LOWVAL, None)
-            self.props[prop_nm] = Prop(val=val, question=question, atype=atype,
-                                       hival=hival, lowval=lowval)
 
     def overwrite_props_from_cl(self):
         prop_nm = None
