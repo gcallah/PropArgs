@@ -1,5 +1,6 @@
 
 from prop_args.constants import *
+from prop_args.prop import Prop
 
 
 def overwrite_props_from_dict(prop_args, prop_dict):
@@ -19,7 +20,6 @@ def overwrite_props_from_dict(prop_args, prop_dict):
         }
     }
     """
-    from prop_args.prop_args import Prop
     for prop_nm in prop_dict:
         atype = prop_dict[prop_nm].get(ATYPE, None)
         val = prop_args._try_type_val(prop_dict[prop_nm].get(VALUE, None),
