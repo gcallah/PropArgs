@@ -96,7 +96,7 @@ Properties will be read from the command line as follows
 #### User
 The final stage is to ask the user for input. The user will only be prompted about properties that have a question.
 
-The default behavior is to prompt questions in the client's command line:
+The default behavior is to prompt questions on the client's command line:
 
     >>> pa = PropArgs.create_props()
     What is the value of prop_1? ("I'm the default prop value") <enter_value>
@@ -118,7 +118,7 @@ questions.
         },
         "prop_name_2": {
             "val": "default",
-            "questoin": "What should prop_name_2 be?"
+            "question": "What should prop_name_2 be?"
         }
     }
 
