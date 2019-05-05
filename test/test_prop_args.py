@@ -12,7 +12,7 @@ import pytest
 import json
 from unittest.mock import patch
 
-from prop_args import prop_args as pa, data_store, env, property_file, command_line
+from prop_args import prop_args as pa, data_store, env, property_file, command_line, user
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -23,7 +23,7 @@ def prop_args():
     """
     A bare-bones prop_args object. To use - make `prop_args` a test argument.
     """
-    return pa.PropArgs.create_props("test_pa", ds_file=None, prop_dict=None)
+    return pa.PropArgs.create_props("test_pa", ds_file=None, prop_dict=None, skip_user_questions=True)
 
 
 @pytest.mark.parametrize('lowval, test_val, hival, expected', [
@@ -91,7 +91,7 @@ def test_user_input(prop_args):
                                              val=-1)
 
     with patch('builtins.input', side_effect=ANSWERS_FOR_INPUT_PROMPTS):
-        prop_args.overwrite_props_from_user()
+        user.interrogate_user_through_cl(prop_args)
 
     assert prop_args[DUMMY_PROP_NM] == ANSWERS_FOR_INPUT_PROMPTS[0]
 

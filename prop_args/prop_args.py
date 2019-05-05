@@ -6,7 +6,7 @@ import logging
 import json
 
 from prop_args.prop import Prop
-from prop_args import data_store, env, property_file, command_line
+from prop_args import data_store, env, property_file, command_line, user
 from prop_args.constants import *
 
 
@@ -18,15 +18,15 @@ class PropArgs:
     """
 
     @staticmethod
-    def create_props(name, ds_file=None, prop_dict=None):
+    def create_props(name, ds_file=None, prop_dict=None, skip_user_questions=False):
         """
         Create a property object with values in 'props'.
         """
         if prop_dict is None:
             prop_dict = dict()
-        return PropArgs(name, ds_file=ds_file, prop_dict=prop_dict)
+        return PropArgs(name, ds_file=ds_file, prop_dict=prop_dict, skip_user_questions=skip_user_questions)
 
-    def __init__(self, name, logfile=None, ds_file=None, prop_dict=None,
+    def __init__(self, name, logfile=None, ds_file=None, prop_dict=None, skip_user_questions=False,
                  loglevel=logging.INFO):
         """
         Loads and sets properties in the following order:
@@ -53,18 +53,12 @@ class PropArgs:
         # 4. process command line args and set them as properties:
         command_line.overwrite_props_from_cl(self)
 
-        if UTYPE in self.props and self.props[UTYPE].val in (TERMINAL, IPYTHON, IPYTHON_NB):
+        if not skip_user_questions:
 
             # 5. Ask the user questions.
-            self.overwrite_props_from_user()
+            user.interrogate_user_through_cl(self)
 
         self.logger = Logger(self, name=name, logfile=logfile)
-
-    def overwrite_props_from_user(self):
-        for prop_nm in self:
-            if (hasattr(self.props[prop_nm], QUESTION)
-                and self.props[prop_nm].question):
-                self.props[prop_nm].val = self._ask_until_correct(prop_nm)
 
     def get_questions(self):
         all_props = self.to_json()
@@ -78,31 +72,6 @@ class PropArgs:
             return type_cast(val)
         else:
             return val
-
-    def _ask_until_correct(self, prop_nm):
-        atype = None
-        if hasattr(self.props[prop_nm], ATYPE):
-            atype = self.props[prop_nm].atype
-
-        while True:
-            answer = input(self.get_question(prop_nm))
-            if not answer:
-                return self.props[prop_nm].val
-
-            try:
-                typed_answer = self._try_type_val(answer, atype)
-            except ValueError:
-                print("Input of invalid type. Should be {atype}"
-                      .format(atype=atype))
-                continue
-
-            if not self._answer_within_bounds(prop_nm, typed_answer):
-                print("Input must be between {lowval} and {hival} inclusive."
-                      .format(lowval=self.props[prop_nm].lowval,
-                              hival=self.props[prop_nm].hival))
-                continue
-
-            return typed_answer
 
     def _answer_within_bounds(self, prop_nm, typed_answer):
         if (self.props[prop_nm].atype is None 
@@ -184,13 +153,6 @@ class PropArgs:
         if key in self.props and self.props[key].val:
             return self.props[key].val
         return default
-
-    def get_question(self, prop_nm):
-            return "{question} [{lowval}-{hival}] ({default}) "\
-                   .format(question=self.props[prop_nm].question, 
-                           lowval=self.props[prop_nm].lowval,
-                           hival=self.props[prop_nm].hival,
-                           default=self.props[prop_nm].val)
 
 
 class Logger:
