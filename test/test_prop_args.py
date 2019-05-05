@@ -44,7 +44,7 @@ def test_int_bounds(lowval, test_val, hival, expected, prop_args):
            == expected
 
 
-def test_ds_store(prop_args):
+def test_set_props_from_ds(prop_args):
     with mock.patch('prop_args.data_store._open_file_as_json') as mock_open_file_as_json:
         mock_open_file_as_json.return_value = json.loads('{{ "{prop_name}": {{"val": 7}} }}'.format(prop_name=DUMMY_PROP_NM))
         prop_args.ds_file = "some_file"
@@ -52,20 +52,22 @@ def test_ds_store(prop_args):
         assert prop_args[DUMMY_PROP_NM] == 7
 
 
-def test_env(prop_args):
+def test_set_props_from_env(prop_args):
     with mock.patch.dict(os.environ,{"hello": "world"}):
         env.set_props_from_env(prop_args)
-        assert prop_args["hello"] == "world"
+
+    assert prop_args["hello"] == "world"
 
 
-def test_env_os(prop_args):
+def test_set_os_in_set_props_from_env(prop_args):
     with mock.patch('platform.system') as mock_platform_system:
         mock_platform_system.return_value = 'Mac'
         env.set_props_from_env(prop_args)
-        assert prop_args['OS'] == 'Mac'
+
+    assert prop_args['OS'] == 'Mac'
 
 
-def test_props_overwriting_through_prop_file(prop_args):
+def test_props_set_through_prop_file(prop_args):
     prop_json = '{{ "{prop_name}": {{"val": 7}} }}'.format(prop_name=DUMMY_PROP_NM)
     prop_dict = json.loads(prop_json)
     prop_args[DUMMY_PROP_NM] = 100
@@ -74,7 +76,7 @@ def test_props_overwriting_through_prop_file(prop_args):
     assert prop_args[DUMMY_PROP_NM] == 7
 
 
-def test_prop_overwrite_from_cl(prop_args):
+def test_prop_set_from_cl(prop_args):
     prop_args.props['existing_prop'] = pa.Prop(atype=pa.INT,
                                                val=-1)
 

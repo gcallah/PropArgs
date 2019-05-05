@@ -53,12 +53,15 @@ class PropArgs:
         # 4. process command line args and set them as properties:
         command_line.set_props_from_cl(self)
 
-        if not skip_user_questions:
+        if not skip_user_questions and user.can_ask_through_cl(self):
 
             # 5. Ask the user questions.
             user.ask_user_through_cl(self)
 
         self.logger = Logger(self, name=name, logfile=logfile)
+
+    def is_admissible_user_type(self):
+        return
 
     def get_questions(self):
         all_props = self.to_json()

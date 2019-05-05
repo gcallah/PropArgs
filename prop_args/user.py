@@ -38,3 +38,6 @@ def _get_question(prop_args, prop_nm):
                        lowval=prop_args.props[prop_nm].lowval,
                        hival=prop_args.props[prop_nm].hival,
                        default=prop_args.props[prop_nm].val)
+
+def can_ask_through_cl(prop_args):
+    return UTYPE in prop_args and prop_args[UTYPE] in (TERMINAL, IPYTHON, IPYTHON_NB)
