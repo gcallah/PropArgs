@@ -2,7 +2,7 @@ import argparse
 import sys
 parser = argparse.ArgumentParser(description='parse key pairs into a dictionary')
 
-def overwrite_props_from_cl(prop_args):
+def set_props_from_cl(prop_args):
 
     args = parser.parse_args(sys.argv[1:])
     cl_dict = vars(args)['my_dict']

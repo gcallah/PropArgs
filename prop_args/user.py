@@ -1,7 +1,7 @@
 
 from prop_args.constants import *
 
-def interrogate_user_through_cl(prop_args):
+def ask_user_through_cl(prop_args):
     for prop_nm in prop_args:
         if (hasattr(prop_args.props[prop_nm], QUESTION)
             and prop_args.props[prop_nm].question):

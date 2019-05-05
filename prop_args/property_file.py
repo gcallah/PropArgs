@@ -3,7 +3,7 @@ from prop_args.constants import *
 from prop_args.prop import Prop
 
 
-def overwrite_props_from_dict(prop_args, prop_dict):
+def set_props_from_dict(prop_args, prop_dict):
     """
     Dict Example:
 

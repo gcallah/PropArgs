@@ -45,18 +45,18 @@ class PropArgs:
         data_store.set_props_from_ds(self)
 
         # 2. The Environment
-        env.overwrite_props_from_env(self)
+        env.set_props_from_env(self)
 
         # 3. Property File
-        property_file.overwrite_props_from_dict(self, prop_dict)
+        property_file.set_props_from_dict(self, prop_dict)
 
         # 4. process command line args and set them as properties:
-        command_line.overwrite_props_from_cl(self)
+        command_line.set_props_from_cl(self)
 
         if not skip_user_questions:
 
             # 5. Ask the user questions.
-            user.interrogate_user_through_cl(self)
+            user.ask_user_through_cl(self)
 
         self.logger = Logger(self, name=name, logfile=logfile)
 
