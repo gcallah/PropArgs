@@ -3,7 +3,6 @@ prop_args2.py
 Set, read, and write program-wide properties in one location. Includes logging.
 """
 import logging
-import sys
 import json
 
 from prop_args.prop import Prop
@@ -66,6 +65,11 @@ class PropArgs:
             if (hasattr(self.props[prop_nm], QUESTION)
                 and self.props[prop_nm].question):
                 self.props[prop_nm].val = self._ask_until_correct(prop_nm)
+
+    def get_questions(self):
+        all_props = self.to_json()
+        question_props = {key: all_props[key] for key in all_props if all_props[key]['question'] is not None }
+        return question_props
 
     @staticmethod
     def _try_type_val(val, atype):

@@ -2,8 +2,6 @@ import argparse
 import sys
 parser = argparse.ArgumentParser(description='parse key pairs into a dictionary')
 
-# from prop_args.constants import *
-
 def overwrite_props_from_cl(prop_args):
 
     args = parser.parse_args(sys.argv[1:])
@@ -16,6 +14,7 @@ def overwrite_props_from_cl(prop_args):
         if prop_nm in prop_args:
             arg = prop_args._try_type_val(arg, prop_args.props[prop_nm].atype)
         prop_args[prop_nm] = arg
+
 
 class StoreDictKeyPair(argparse.Action):
      def __call__(self, parser, namespace, values, option_string=None):

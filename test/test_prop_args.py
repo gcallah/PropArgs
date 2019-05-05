@@ -94,3 +94,13 @@ def test_user_input(prop_args):
         prop_args.overwrite_props_from_user()
 
     assert prop_args[DUMMY_PROP_NM] == ANSWERS_FOR_INPUT_PROMPTS[0]
+
+def test_get_questions(prop_args):
+    prop_args.props['question_prop'] = pa.Prop(question="Enter Integer: ")
+
+    prop_args.props['no_question_prop'] = pa.Prop()
+
+    qs = prop_args.get_questions()
+
+    assert 'question_prop' in qs
+    assert 'no_question_prop' not in qs
