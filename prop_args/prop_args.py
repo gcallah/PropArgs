@@ -7,7 +7,7 @@ import sys
 import json
 
 from prop_args.prop import Prop
-from prop_args import data_store, env, property_file
+from prop_args import data_store, env, property_file, command_line
 from prop_args.constants import *
 
 
@@ -52,7 +52,7 @@ class PropArgs:
         property_file.overwrite_props_from_dict(self, prop_dict)
 
         # 4. process command line args and set them as properties:
-        self.overwrite_props_from_cl()
+        command_line.overwrite_props_from_cl(self)
 
         if UTYPE in self.props and self.props[UTYPE].val in (TERMINAL, IPYTHON, IPYTHON_NB):
 
@@ -61,25 +61,12 @@ class PropArgs:
 
         self.logger = Logger(self, name=name, logfile=logfile)
 
-    def overwrite_props_from_cl(self):
-        prop_nm = None
-        for arg in sys.argv:
-            # the first arg (-prop) names the property
-            if arg.startswith(SWITCH):
-                prop_nm = arg.lstrip(SWITCH)
-            # the second arg is the property value (which we try to cast to the proper type)
-            elif prop_nm is not None:
-                if prop_nm in self:
-                    arg = self._try_type_val(arg, self.props[prop_nm].atype)
-                    self[prop_nm] = arg
-                    prop_nm = None
-
     def overwrite_props_from_user(self):
         for prop_nm in self:
             if (hasattr(self.props[prop_nm], QUESTION)
                 and self.props[prop_nm].question):
                 self.props[prop_nm].val = self._ask_until_correct(prop_nm)
-    
+
     @staticmethod
     def _try_type_val(val, atype):
         if atype in type_dict:

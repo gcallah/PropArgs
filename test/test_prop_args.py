@@ -5,13 +5,14 @@ create new run scripts, and should be run to test
 the system after library changes.
 """
 import os
+import sys
 from unittest import mock
 
 import pytest
 import json
 from unittest.mock import patch
 
-from prop_args import prop_args as pa, data_store, env, property_file
+from prop_args import prop_args as pa, data_store, env, property_file, command_line
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -74,14 +75,14 @@ def test_props_overwriting_through_prop_file(prop_args):
 
 
 def test_prop_overwrite_from_cl(prop_args):
-    prop_args.props[DUMMY_PROP_NM] = pa.Prop(atype=pa.INT,
-                                             val=-1)
+    prop_args.props['existing_prop'] = pa.Prop(atype=pa.INT,
+                                               val=-1)
 
-    with patch('sys.argv', ['-{}'.format(DUMMY_PROP_NM),
-                            '7']):
-        prop_args.overwrite_props_from_cl()
+    with patch.object(sys, 'argv', ["file.py", "--props", "existing_prop=7,new_prop=4"]):
+        command_line.overwrite_props_from_cl(prop_args)
 
-    assert prop_args[DUMMY_PROP_NM] == 7
+    assert prop_args['existing_prop'] == 7
+    assert prop_args['new_prop'] == '4'
 
 
 def test_user_input(prop_args):
