@@ -1,5 +1,5 @@
 
-from prop_args.constants import *
+from propargs.constants import *
 
 def ask_user_through_cl(prop_args):
     for prop_nm in prop_args:

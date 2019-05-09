@@ -12,7 +12,7 @@ import pytest
 import json
 from unittest.mock import patch
 
-from prop_args import propargs as pa, data_store, env, property_file, command_line, user
+from propargs import propargs as pa, data_store, env, property_file, command_line, user
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -21,7 +21,7 @@ ANSWERS_FOR_INPUT_PROMPTS = [1]
 @pytest.fixture
 def prop_args():
     """
-    A bare-bones prop_args object. To use - make `prop_args` a test argument.
+    A bare-bones propargs object. To use - make `propargs` a test argument.
     """
     return pa.PropArgs.create_props("test_pa", ds_file=None, prop_dict=None, skip_user_questions=True)
 
@@ -45,7 +45,7 @@ def test_int_bounds(lowval, test_val, hival, expected, prop_args):
 
 
 def test_set_props_from_ds(prop_args):
-    with mock.patch('prop_args.data_store._open_file_as_json') as mock_open_file_as_json:
+    with mock.patch('propargs.data_store._open_file_as_json') as mock_open_file_as_json:
         mock_open_file_as_json.return_value = json.loads('{{ "{prop_name}": {{"val": 7}} }}'.format(prop_name=DUMMY_PROP_NM))
         prop_args.ds_file = "some_file"
         data_store.set_props_from_ds(prop_args)

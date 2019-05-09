@@ -1,6 +1,6 @@
 
-from prop_args.constants import *
-from prop_args.prop import Prop
+from propargs.constants import *
+from propargs.prop import Prop
 
 
 def set_props_from_dict(prop_args, prop_dict):

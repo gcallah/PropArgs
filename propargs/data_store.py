@@ -3,7 +3,7 @@ Methods the Data Store import process
 """
 import json
 
-from prop_args import property_file
+from propargs import property_file
 
 def set_props_from_ds(prop_args):
     if prop_args.ds_file:

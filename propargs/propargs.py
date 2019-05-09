@@ -5,9 +5,9 @@ Set, read, and write program-wide properties in one location. Includes logging.
 import logging
 import json
 
-from prop_args.prop import Prop
-from prop_args import data_store, env, property_file, command_line, user
-from prop_args.constants import *
+from propargs.prop import Prop
+from propargs import data_store, env, property_file, command_line, user
+from propargs.constants import *
 
 
 class PropArgs:

@@ -1,7 +1,7 @@
 import os
 import platform
 
-from prop_args.constants import OS
+from propargs.constants import OS
 
 def set_props_from_env(prop_args):
     env_dict = os.environ
