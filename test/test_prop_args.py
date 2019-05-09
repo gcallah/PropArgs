@@ -76,6 +76,10 @@ def test_props_set_through_prop_file(prop_args):
     assert prop_args[DUMMY_PROP_NM] == 7
 
 
+def test_props_set_through_prop_file_no_dict(prop_args):
+    property_file.set_props_from_dict(prop_args, None)
+
+
 def test_prop_set_from_cl(prop_args):
     prop_args.props['existing_prop'] = pa.Prop(atype=pa.INT,
                                                val=-1)

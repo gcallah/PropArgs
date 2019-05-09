@@ -20,6 +20,9 @@ def set_props_from_dict(prop_args, prop_dict):
         }
     }
     """
+    if prop_dict is None:
+        return
+
     for prop_nm in prop_dict:
         atype = prop_dict[prop_nm].get(ATYPE, None)
         val = prop_args._try_type_val(prop_dict[prop_nm].get(VALUE, None),
