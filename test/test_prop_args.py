@@ -12,7 +12,7 @@ import pytest
 import json
 from unittest.mock import patch
 
-from prop_args import prop_args as pa, data_store, env, property_file, command_line, user
+from prop_args import propargs as pa, data_store, env, property_file, command_line, user
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]

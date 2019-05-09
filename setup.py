@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="PropArgs",
+    name="propargs",
     version="0.0.1",
     author="Nathan Conroy, Gene Callahan",
     author_email="nathanconroydev@gmail.com",
@@ -13,7 +13,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/gcallah/PropArgs",
-    packages=setuptools.find_packages(),
+    packages=['propargs'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
