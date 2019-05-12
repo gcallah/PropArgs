@@ -1,6 +1,5 @@
 # PropArgs
-A module for systematically organizing user preferences acquired from a database, env vars, a parameter file, or user 
-choices.
+A module for systematically organizing user preferences acquired from a data store, env vars, a parameter file, the command line and/or user choices.
 
 ## How it Works
 
@@ -8,14 +7,12 @@ choices.
 PropArgs is initialized by sequentially loading the following five stages of input:
 
 1. Data Store
+2. Environment
+3. Property File
+4. Command Line
+5. User
 
-1. Environment
-
-1. Property File
-
-1. Command Line
-
-1. User
+The above is the default ordering. The user may change that order.
 
 Properties may be added in any stage except User. A property defined in one stage may be overwritten in later stages. 
 
@@ -29,6 +26,8 @@ Each property has a key and a value and is accessed like a dictionary:
 In addition to this, each property may have associated metadata. These are at present: a question for the
 user-input prompt, a datatype, an upper bound, and a lower bound. If at any point in the loading process the
 metadata rules are broken (e.g. the val exceeds the upper bound) an error will be raised.
+
+The system has some similarities to the traitlets configuration module developed for iPython and Jupyter, but is more flexible, seeks configuration info from more sources, and is not tied to Python classes. (The property structure itself keeps the config info, but those values may be loaded into clases or not as per the needs of the application.)
 
 ### Details
 
