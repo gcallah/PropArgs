@@ -84,7 +84,9 @@ def test_prop_set_from_cl(prop_args):
     prop_args.props['existing_prop'] = pa.Prop(atype=pa.INT,
                                                val=-1)
 
-    with patch.object(sys, 'argv', ["file.py", "--props", "existing_prop=7,new_prop=4"]):
+    with patch.object(sys, 'argv', ["file.py", "--irrelevant-switch",
+                                    "--props", "existing_prop=7,new_prop=4",
+                                    "--other-irrelevant-switch"]):
         command_line.set_props_from_cl(prop_args)
 
     assert prop_args['existing_prop'] == 7
