@@ -46,7 +46,7 @@ The JSON formatting is as follows:
             "question": "What value should this property have?",
             "atype": "INT",
             "hival": 10,
-            "loval": 0
+            "lowval": 0
         },
         "prop_name_2": {
             "val": "Hello World."
@@ -79,7 +79,7 @@ JSON formatting:
             "question": "What value should this property have?",
             "atype": "INT",
             "hival": 10,
-            "loval": 0
+            "lowval": 0
         },
         "prop_name_2": {
             "val": "Hello World."
@@ -113,7 +113,7 @@ questions.
             "question": "",
             "atype": "DBL",
             "hival": 10.0,
-            "loval": -0.5
+            "lowval": -0.5
         },
         "prop_name_2": {
             "val": "default",
