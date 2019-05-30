@@ -53,12 +53,15 @@ def test_set_props_from_ds(prop_args):
         assert prop_args[DUMMY_PROP_NM] == 7
 
 
-def test_path_to_ds_file():
-    ds_file = 'ds_file'
-    with mock.patch.dict(os.environ, {PROPS_DIR: '/path/to/'}):
+@pytest.mark.parametrize('environment_variables, ds_file, expected_file_path',
+                          [({PROPS_DIR: '/path/to/'}, 'ds_file', '/path/to/ds_file'),
+                           (dict(), 'ds_file', os.path.join(os.getcwd(), 'ds_file'))])
+def test_path_to_ds_file(environment_variables, ds_file, expected_file_path):
+
+    with mock.patch.dict(os.environ, environment_variables):
         file_path = data_store._path_to_file(ds_file)
 
-    assert file_path == '/path/to/ds_file'
+    assert file_path == expected_file_path
 
 
 def test_set_props_from_env(prop_args):
