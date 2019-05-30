@@ -13,6 +13,7 @@ import json
 from unittest.mock import patch
 
 from propargs import propargs as pa, data_store, env, property_file, command_line, user
+from propargs.constants import PROPS_DIR
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -50,6 +51,14 @@ def test_set_props_from_ds(prop_args):
         prop_args.ds_file = "some_file"
         data_store.set_props_from_ds(prop_args)
         assert prop_args[DUMMY_PROP_NM] == 7
+
+
+def test_path_to_ds_file():
+    ds_file = 'ds_file'
+    with mock.patch.dict(os.environ, {PROPS_DIR: '/path/to/'}):
+        file_path = data_store._path_to_file(ds_file)
+
+    assert file_path == '/path/to/ds_file'
 
 
 def test_set_props_from_env(prop_args):
