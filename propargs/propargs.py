@@ -24,9 +24,11 @@ class PropArgs:
         """
         if prop_dict is None:
             prop_dict = dict()
-        return PropArgs(name, ds_file=ds_file, prop_dict=prop_dict, skip_user_questions=skip_user_questions)
+        return PropArgs(name, ds_file=ds_file, prop_dict=prop_dict,
+                        skip_user_questions=skip_user_questions)
 
-    def __init__(self, name, logfile=None, ds_file=None, prop_dict=None, skip_user_questions=False,
+    def __init__(self, name, logfile=None, ds_file=None,
+                 prop_dict=None, skip_user_questions=False,
                  loglevel=logging.INFO):
         """
         Loads and sets properties in the following order:
