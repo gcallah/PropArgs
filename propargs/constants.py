@@ -3,6 +3,8 @@ SWITCH = '-'
 
 OS = "OS"
 
+PROPS_DIR = 'props_dir'
+
 UTYPE = "user_type"
 # user types (DUMMY type is only for automated test)
 TERMINAL = "terminal"

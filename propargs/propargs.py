@@ -2,7 +2,6 @@
 prop_args2.py
 Set, read, and write program-wide properties in one location. Includes logging.
 """
-import logging
 import json
 
 from propargs.prop import Prop
@@ -24,12 +23,9 @@ class PropArgs:
         """
         if prop_dict is None:
             prop_dict = dict()
-        return PropArgs(name, ds_file=ds_file, prop_dict=prop_dict,
-                        skip_user_questions=skip_user_questions)
+        return PropArgs(name, ds_file=ds_file, prop_dict=prop_dict, skip_user_questions=skip_user_questions)
 
-    def __init__(self, name, logfile=None, ds_file=None,
-                 prop_dict=None, skip_user_questions=False,
-                 loglevel=logging.INFO):
+    def __init__(self, name, logfile=None, ds_file=None, prop_dict=None, skip_user_questions=False):
         """
         Loads and sets properties in the following order:
         1. The Database (Not Implemented)
@@ -59,8 +55,6 @@ class PropArgs:
 
             # 5. Ask the user questions.
             user.ask_user_through_cl(self)
-
-        self.logger = Logger(self, name=name, logfile=logfile)
 
     def is_admissible_user_type(self):
         return
@@ -158,31 +152,3 @@ class PropArgs:
         if key in self.props and self.props[key].val:
             return self.props[key].val
         return default
-
-
-class Logger:
-    """
-    A class to track how we are logging.
-    """
-
-    DEF_FORMAT = '%(asctime)s:%(levelname)s:%(message)s'
-    DEF_LEVEL = logging.INFO
-    DEF_FILEMODE = 'w'
-    # DEF_FILENAME = 'log.txt'
-
-    def __init__(self, props, name, logfile=None,
-                 loglevel=logging.INFO):
-        if logfile is None:
-            logfile = name + ".log"
-        fmt = props["log_format"] if "log_format" in props else Logger.DEF_FORMAT
-        lvl = props["log_level"] if "log_level" in props else Logger.DEF_LEVEL
-        fmd = props["log_fmode"] if "log_fmode" in props else Logger.DEF_FILEMODE
-        props["log_fname"] = logfile
-# we put the following back in once the model names are fixed
-#  fnm = props.get("log_fname", logfile)
-        logging.basicConfig(format=fmt,
-                            level=lvl,
-                            filemode=fmd,
-                            filename=logfile)
-        logging.info("Logging initialized.")
-

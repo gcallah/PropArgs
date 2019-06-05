@@ -2,8 +2,11 @@
 Methods the Data Store import process
 """
 import json
+import os
 
 from propargs import property_file
+from propargs.constants import PROPS_DIR
+
 
 def set_props_from_ds(prop_args):
     if prop_args.ds_file:
@@ -12,6 +15,15 @@ def set_props_from_ds(prop_args):
 
 
 def _open_file_as_json(ds_file):
-    with open(ds_file, 'r') as f:
+    with open(_path_to_file(ds_file), 'r') as f:
         ds_dict = json.load(f)
     return ds_dict
+
+
+def _path_to_file(ds_file):
+    if PROPS_DIR in os.environ:
+        path = str(os.environ[PROPS_DIR])
+    else:
+        path = os.getcwd()
+
+    return os.path.join(path, ds_file)

@@ -13,6 +13,7 @@ import json
 from unittest.mock import patch
 
 from propargs import propargs as pa, data_store, env, property_file, command_line, user
+from propargs.constants import PROPS_DIR
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -52,6 +53,17 @@ def test_set_props_from_ds(prop_args):
         assert prop_args[DUMMY_PROP_NM] == 7
 
 
+@pytest.mark.parametrize('environment_variables, ds_file, expected_file_path',
+                          [({PROPS_DIR: '/path/to/'}, 'ds_file', '/path/to/ds_file'),
+                           (dict(), 'ds_file', os.path.join(os.getcwd(), 'ds_file'))])
+def test_path_to_ds_file(environment_variables, ds_file, expected_file_path):
+
+    with mock.patch.dict(os.environ, environment_variables):
+        file_path = data_store._path_to_file(ds_file)
+
+    assert file_path == expected_file_path
+
+
 def test_set_props_from_env(prop_args):
     with mock.patch.dict(os.environ,{"hello": "world"}):
         env.set_props_from_env(prop_args)
@@ -84,7 +96,9 @@ def test_prop_set_from_cl(prop_args):
     prop_args.props['existing_prop'] = pa.Prop(atype=pa.INT,
                                                val=-1)
 
-    with patch.object(sys, 'argv', ["file.py", "--props", "existing_prop=7,new_prop=4"]):
+    with patch.object(sys, 'argv', ["file.py", "--irrelevant-switch",
+                                    "--props", "existing_prop=7,new_prop=4",
+                                    "--other-irrelevant-switch"]):
         command_line.set_props_from_cl(prop_args)
 
     assert prop_args['existing_prop'] == 7
