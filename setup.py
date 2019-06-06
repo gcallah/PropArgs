@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="propargs",
-    version="0.0.3",
+    version="0.0.5",
     author="Nathan Conroy, Gene Callahan",
     author_email="nathanconroydev@gmail.com",
     description="A module for systematically organizing user preferences acquired "

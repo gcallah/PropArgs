@@ -28,7 +28,7 @@ class PropArgs:
     def __init__(self, name, logfile=None, ds_file=None, prop_dict=None, skip_user_questions=False):
         """
         Loads and sets properties in the following order:
-        1. The Database (Not Implemented)
+        1. The Data Store
         2. The User's Environment (operating system, dev/prod settings, etc.)
         3. Property File
         4. Command Line

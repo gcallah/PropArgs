@@ -15,8 +15,11 @@ def set_props_from_ds(prop_args):
 
 
 def _open_file_as_json(ds_file):
-    with open(_path_to_file(ds_file), 'r') as f:
-        ds_dict = json.load(f)
+    try:
+        with open(_path_to_file(ds_file), 'r') as f:
+            ds_dict = json.load(f)
+    except FileNotFoundError:
+        ds_dict = dict()
     return ds_dict
 
 
