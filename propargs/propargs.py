@@ -17,15 +17,18 @@ class PropArgs:
     """
 
     @staticmethod
-    def create_props(name, ds_file=None, prop_dict=None, skip_user_questions=False):
+    def create_props(name, ds_file=None, prop_dict=None,
+                     skip_user_questions=False):
         """
         Create a property object with values in 'props'.
         """
         if prop_dict is None:
             prop_dict = dict()
-        return PropArgs(name, ds_file=ds_file, prop_dict=prop_dict, skip_user_questions=skip_user_questions)
+        return PropArgs(name, ds_file=ds_file, prop_dict=prop_dict,
+                        skip_user_questions=skip_user_questions)
 
-    def __init__(self, name, logfile=None, ds_file=None, prop_dict=None, skip_user_questions=False):
+    def __init__(self, name, logfile=None, ds_file=None,
+                 prop_dict=None, skip_user_questions=False):
         """
         Loads and sets properties in the following order:
         1. The Data Store
@@ -149,6 +152,6 @@ class PropArgs:
         return { prop_nm: self.props[prop_nm].to_json() for prop_nm in self.props }
 
     def get(self, key, default=None):
-        if key in self.props and self.props[key].val:
-            return self.props[key].val
-        return default
+        if key not in self.props or not self.props[key].val:
+            self.props[key] = Prop(val=default)
+        return self.props[key].val
