@@ -120,6 +120,18 @@ questions.
             "question": "What should prop_name_2 be?"
         }
     }
+    
+#### Other Ways Props May Be Added Or Modified
+ 
+Outside of accessing a PropArgs object like a dictionary, values may be gotten through the 
+`get(key, default=None)` method. Or if the key has not already been associated with a property,
+a new property will be bound to `default` (or `None` if a `default` isn't specified).
+ 
+    >>> pa = PropArgs.create_props()
+    >>> pa.get('new_prop', default=2)
+    2
+    >>> pa.get('newer_prop')
+    None
 
 ## Credits
 Idea - Robert Dodson
