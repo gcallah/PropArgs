@@ -7,7 +7,7 @@ A module for systematically organizing user preferences acquired from a data sto
 PropArgs is initialized by sequentially loading the following five stages of input:
 
 1. Data Store
-2. Property File
+2. Property Dictionary
 3. Environment
 4. Command Line
 5. User
@@ -60,18 +60,12 @@ Note that a property need not have all (or any) fields defined. If no "val" is s
 Details on database data stores to come ...
 
 
-#### Environment
-PropArgs will read and add all the environment variables of the program in which PropArgs is initialized.
-(i.e. everything in python's os.environ)
+#### Property Dictionary
+Properties may be loaded by passing a dictionary at initialization:
 
+    >>> pa = PropArgs.create_props(prop_dict=prop_dict)
 
-#### Property File
-A property file will be specified on initialization:
-
-    >>> pa = PropArgs.create_props(prop_file=file_name)
-
-Currently the only Property File type supported is JSON. The formatting is the same as the Data Store's 
-JSON formatting:
+the dictionary formatted as follows:
 
     {
         "prop_name_1": {
@@ -85,6 +79,11 @@ JSON formatting:
             "val": "Hello World."
         }
     }
+
+
+#### Environment
+PropArgs will read and add all the environment variables of the program in which PropArgs is initialized.
+(i.e. everything in python's os.environ)
 
 
 #### Command Line

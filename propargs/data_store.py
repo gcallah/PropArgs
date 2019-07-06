@@ -4,14 +4,14 @@ Methods the Data Store import process
 import json
 import os
 
-from propargs import property_file
+from propargs import property_dict
 from propargs.constants import PROPS_DIR
 
 
 def set_props_from_ds(prop_args):
     if prop_args.ds_file:
         ds_dict = _open_file_as_json(prop_args.ds_file)
-        property_file.set_props_from_dict(prop_args, ds_dict)
+        property_dict.set_props_from_dict(prop_args, ds_dict)
 
 
 def _open_file_as_json(ds_file):

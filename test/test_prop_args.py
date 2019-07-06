@@ -12,7 +12,7 @@ import pytest
 import json
 from unittest.mock import patch
 
-from propargs import propargs as pa, data_store, env, property_file, command_line, user
+from propargs import propargs as pa, data_store, env, property_dict, command_line, user
 from propargs.constants import PROPS_DIR
 
 DUMMY_PROP_NM = "dummy_prop"
@@ -83,13 +83,13 @@ def test_props_set_through_prop_file(prop_args):
     prop_json = '{{ "{prop_name}": {{"val": 7}} }}'.format(prop_name=DUMMY_PROP_NM)
     prop_dict = json.loads(prop_json)
     prop_args[DUMMY_PROP_NM] = 100
-    property_file.set_props_from_dict(prop_args, prop_dict)
+    property_dict.set_props_from_dict(prop_args, prop_dict)
 
     assert prop_args[DUMMY_PROP_NM] == 7
 
 
 def test_props_set_through_prop_file_no_dict(prop_args):
-    property_file.set_props_from_dict(prop_args, None)
+    property_dict.set_props_from_dict(prop_args, None)
 
 
 def test_prop_set_from_cl(prop_args):

@@ -5,7 +5,7 @@ Set, read, and write program-wide properties in one location. Includes logging.
 import json
 
 from propargs.prop import Prop
-from propargs import data_store, env, property_file, command_line, user
+from propargs import data_store, env, property_dict, command_line, user
 from propargs.constants import *
 
 
@@ -32,7 +32,7 @@ class PropArgs:
         """
         Loads and sets properties in the following order:
         1. The Data Store
-        2. Property File
+        2. Property Dictionary
         3. The User's Environment (operating system, dev/prod settings, etc.)
         4. Command Line
         5. Questions Prompts During Run-Time
@@ -46,8 +46,8 @@ class PropArgs:
         if self.ds_file:
             data_store.set_props_from_ds(self)
 
-        # 2. Property File
-        property_file.set_props_from_dict(self, prop_dict)
+        # 2. Property Dictionary
+        property_dict.set_props_from_dict(self, prop_dict)
 
         # 3. The Environment
         env.set_props_from_env(self)
