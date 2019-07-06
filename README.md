@@ -7,8 +7,8 @@ A module for systematically organizing user preferences acquired from a data sto
 PropArgs is initialized by sequentially loading the following five stages of input:
 
 1. Data Store
-2. Environment
-3. Property File
+2. Property File
+3. Environment
 4. Command Line
 5. User
 

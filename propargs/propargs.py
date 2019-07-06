@@ -32,8 +32,8 @@ class PropArgs:
         """
         Loads and sets properties in the following order:
         1. The Data Store
-        2. The User's Environment (operating system, dev/prod settings, etc.)
-        3. Property File
+        2. Property File
+        3. The User's Environment (operating system, dev/prod settings, etc.)
         4. Command Line
         5. Questions Prompts During Run-Time
         """
@@ -43,13 +43,14 @@ class PropArgs:
         self.props = prop_dict or dict()
 
         # 1. The Data Store
-        data_store.set_props_from_ds(self)
+        if self.ds_file:
+            data_store.set_props_from_ds(self)
 
-        # 2. The Environment
-        env.set_props_from_env(self)
-
-        # 3. Property File
+        # 2. Property File
         property_file.set_props_from_dict(self, prop_dict)
+
+        # 3. The Environment
+        env.set_props_from_env(self)
 
         # 4. process command line args and set them as properties:
         command_line.set_props_from_cl(self)
