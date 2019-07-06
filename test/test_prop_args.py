@@ -65,10 +65,12 @@ def test_path_to_ds_file(environment_variables, ds_file, expected_file_path):
 
 
 def test_set_props_from_env(prop_args):
-    with mock.patch.dict(os.environ,{"hello": "world"}):
+    prop_args["prop_also_in_env"] = "imavalue"
+    with mock.patch.dict(os.environ,{"prop_also_in_env": "imavalue"}, {"prop_not_yet_loaded": "imanothervalue"}):
         env.set_props_from_env(prop_args)
 
-    assert prop_args["hello"] == "world"
+    assert prop_args["prop_also_in_env"] == "imavalue"
+    assert "prop_not_yet_loaded" not in prop_args
 
 
 def test_set_os_in_set_props_from_env(prop_args):
