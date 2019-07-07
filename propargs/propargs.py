@@ -60,9 +60,6 @@ class PropArgs:
             # 5. Ask the user questions.
             user.ask_user_through_cl(self)
 
-    def is_admissible_user_type(self):
-        return
-
     def get_questions(self):
         all_props = self.to_json()
         question_props = {key: all_props[key] for key in all_props if all_props[key]['question'] is not None }
