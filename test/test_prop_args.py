@@ -81,16 +81,15 @@ def test_set_os_in_set_props_from_env(prop_args):
     assert prop_args['OS'] == 'Mac'
 
 
-def test_props_set_through_prop_file(prop_args):
-    prop_json = '{{ "{prop_name}": {{"val": 7}} }}'.format(prop_name=DUMMY_PROP_NM)
-    prop_dict = json.loads(prop_json)
+def test_props_set_through_prop_dict(prop_args):
+    prop_dict = {DUMMY_PROP_NM: {"val": 7} }
     prop_args[DUMMY_PROP_NM] = 100
     property_dict.set_props_from_dict(prop_args, prop_dict)
 
     assert prop_args[DUMMY_PROP_NM] == 7
 
 
-def test_props_set_through_prop_file_no_dict(prop_args):
+def test_props_set_null_dict(prop_args):
     property_dict.set_props_from_dict(prop_args, None)
 
 
