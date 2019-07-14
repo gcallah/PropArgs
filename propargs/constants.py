@@ -1,3 +1,4 @@
+from collections import namedtuple
 
 SWITCH = '-'
 
@@ -6,6 +7,7 @@ OS = "OS"
 PROPS_DIR = 'props_dir'
 
 UTYPE = "user_type"
+
 # user types (DUMMY type is only for automated test)
 TERMINAL = "terminal"
 IPYTHON = "iPython"
@@ -25,3 +27,6 @@ FLT = 'DBL'
 STR = 'STR'
 CMPLX = 'CMPLX'
 type_dict = {BOOL: bool, INT: int, FLT: float, CMPLX: complex, STR: str}
+
+AutoLoadProp = namedtuple('AutoLoadProp', 'prop_name, default')
+ENV_AUTO_LOAD_PROPS = [AutoLoadProp(prop_name=UTYPE, default=TERMINAL)]

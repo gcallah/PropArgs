@@ -6,14 +6,14 @@ the system after library changes.
 """
 import os
 import sys
-from unittest import mock
-
 import pytest
 import json
-from unittest.mock import patch
 
+from propargs import constants
+from unittest import mock
+from unittest.mock import patch
 from propargs import propargs as pa, data_store, env, property_dict, command_line, user
-from propargs.constants import PROPS_DIR
+from propargs.constants import PROPS_DIR, AutoLoadProp, IPYTHON_NB
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -64,13 +64,17 @@ def test_path_to_ds_file(environment_variables, ds_file, expected_file_path):
     assert file_path == expected_file_path
 
 
+@mock.patch('propargs.env.ENV_AUTO_LOAD_PROPS', [AutoLoadProp(prop_name="iautoload", default="iamdefault")])
 def test_set_props_from_env(prop_args):
     prop_args["prop_also_in_env"] = "imavalue"
-    with mock.patch.dict(os.environ,{"prop_also_in_env": "imavalue"}, {"prop_not_yet_loaded": "imanothervalue"}):
+    with mock.patch.dict(os.environ,
+                         {"prop_also_in_env": "imavalue",
+                          "prop_not_yet_loaded": "imanothervalue"}):
         env.set_props_from_env(prop_args)
 
     assert prop_args["prop_also_in_env"] == "imavalue"
     assert "prop_not_yet_loaded" not in prop_args
+    assert prop_args["iautoload"] == "iamdefault"
 
 
 def test_set_os_in_set_props_from_env(prop_args):
