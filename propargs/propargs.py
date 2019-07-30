@@ -150,6 +150,6 @@ class PropArgs:
         return { prop_nm: self.props[prop_nm].to_json() for prop_nm in self.props }
 
     def get(self, key, default=None):
-        if key not in self.props or not self.props[key].val:
+        if key not in self.props or self.props[key].val is None:
             self.props[key] = Prop(val=default)
         return self.props[key].val
