@@ -9,11 +9,10 @@ import sys
 import pytest
 import json
 
-from propargs import constants
 from unittest import mock
 from unittest.mock import patch
 from propargs import propargs as pa, data_store, env, property_dict, command_line, user
-from propargs.constants import PROPS_DIR, AutoLoadProp, IPYTHON_NB
+from propargs.constants import PROPS_DIR, AutoLoadProp
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -130,3 +129,13 @@ def test_get_questions(prop_args):
 
     assert 'question_prop' in qs
     assert 'no_question_prop' not in qs
+
+
+def test_singleton():
+    pa.PropArgs('props1', prop_dict={'i like': {'val': 'turtles'}})
+
+    assert pa.get_prop('i like') == 'turtles'
+
+    pa.PropArgs('props2', prop_dict={'i like': {'val': 'tests that pass'}})
+
+    assert pa.get_prop('i like') == 'tests that pass'

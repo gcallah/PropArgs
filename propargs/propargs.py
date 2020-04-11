@@ -8,6 +8,19 @@ from propargs.prop import Prop
 from propargs import data_store, env, property_dict, command_line, user
 from propargs.constants import *
 
+_the_props = None
+
+
+def get_prop(key, default_val=None):
+    """
+    Get a particular property.
+    If key is missing (or no props) return default_val.
+    """
+    if _the_props is None:
+        return default_val
+    else:
+        return _the_props.get(key, default_val)
+
 
 class PropArgs:
     """
@@ -24,8 +37,11 @@ class PropArgs:
         """
         if prop_dict is None:
             prop_dict = dict()
-        return PropArgs(name, ds_file=ds_file, prop_dict=prop_dict,
-                        skip_user_questions=skip_user_questions)
+
+        pa = PropArgs(name, ds_file=ds_file, prop_dict=prop_dict,
+                      skip_user_questions=skip_user_questions)
+
+        return pa
 
     def __init__(self, name, logfile=None, ds_file=None,
                  prop_dict=None, skip_user_questions=False):
@@ -37,6 +53,9 @@ class PropArgs:
         4. Command Line
         5. Questions Prompts During Run-Time
         """
+        global _the_props
+        _the_props = self
+
         self.name = name
         self.logfile = logfile
         self.ds_file = ds_file
