@@ -12,7 +12,7 @@ import json
 from unittest import mock
 from unittest.mock import patch
 from propargs import propargs as pa, data_store, env, property_dict, command_line, user
-from propargs.constants import PROPS_DIR, AutoLoadProp
+from propargs.constants import PROPS_DIR, AutoLoadProp, FLT, INT, CMPLX, STR, BOOL
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -90,6 +90,29 @@ def test_props_set_through_prop_dict(prop_args):
     property_dict.set_props_from_dict(prop_args, prop_dict)
 
     assert prop_args[DUMMY_PROP_NM] == 7
+
+
+def test_type_null_val(prop_args):
+    bool_none = prop_args._try_type_val(None, BOOL)
+    float_none = prop_args._try_type_val(None, FLT)
+    int_none = prop_args._try_type_val(None, INT)
+    string_none = prop_args._try_type_val(None, STR)
+    complex_none = prop_args._try_type_val(None, CMPLX)
+
+    assert isinstance(bool_none, bool)
+    assert bool_none is False
+
+    assert isinstance(float_none, float)
+    assert float_none == 0.0
+
+    assert isinstance(int_none, int)
+    assert int_none == 0
+
+    assert isinstance(string_none, str)
+    assert string_none == ''
+
+    assert isinstance(complex_none, complex)
+    assert complex_none == 0j
 
 
 def test_props_set_null_dict(prop_args):

@@ -27,6 +27,7 @@ FLT = 'DBL'
 STR = 'STR'
 CMPLX = 'CMPLX'
 type_dict = {BOOL: bool, INT: int, FLT: float, CMPLX: complex, STR: str}
+type_for_none = {BOOL: False, INT: 0, FLT: 0.0, CMPLX: 0j, STR: ''}
 
 AutoLoadProp = namedtuple('AutoLoadProp', 'prop_name, default')
 ENV_AUTO_LOAD_PROPS = [AutoLoadProp(prop_name=UTYPE, default=TERMINAL)]

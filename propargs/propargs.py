@@ -86,6 +86,9 @@ class PropArgs:
 
     @staticmethod
     def _try_type_val(val, atype):
+        if val is None:
+            return type_for_none[atype]
+
         if atype in type_dict:
             type_cast = type_dict[atype]
             return type_cast(val)

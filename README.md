@@ -55,7 +55,15 @@ The JSON formatting is as follows:
         }
     }
 
-Note that a property need not have all (or any) fields defined. If no "val" is specified, it defaults to `None`.
+Note that a property need not have all (or any) fields defined. If no "val" is specified, a default "val"
+is assigned according to its atype:
+
+* `"BOOL"` defaults to `False`
+* `"INT"` defaults to `0`
+* `"FLT"` defaults to `0.0`
+* `"CMPLX"` defaults to `0j`
+* `"STR"` defaults to `""`
+* If no type is given, the value defaults to `None`.
 
 Details on database data stores to come ...
 
