@@ -84,17 +84,6 @@ class PropArgs:
         question_props = {key: all_props[key] for key in all_props if all_props[key]['question'] is not None }
         return question_props
 
-    @staticmethod
-    def _try_type_val(val, atype):
-        if val is None:
-            return type_for_none[atype]
-
-        if atype in type_dict:
-            type_cast = type_dict[atype]
-            return type_cast(val)
-        else:
-            return val
-
     def _answer_within_bounds(self, prop_nm, typed_answer):
         if (self.props[prop_nm].atype is None 
             or self.props[prop_nm].atype in (STR, BOOL)):

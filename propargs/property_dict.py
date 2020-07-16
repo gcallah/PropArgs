@@ -1,5 +1,6 @@
 
 from propargs.constants import *
+from propargs.type import try_type_val
 from propargs.prop import Prop
 
 
@@ -25,7 +26,7 @@ def set_props_from_dict(prop_args, prop_dict):
 
     for prop_nm in prop_dict:
         atype = prop_dict[prop_nm].get(ATYPE, None)
-        val = prop_args._try_type_val(prop_dict[prop_nm].get(VALUE, None),
+        val = try_type_val(prop_dict[prop_nm].get(VALUE, None),
                                       atype)
         question = prop_dict[prop_nm].get(QUESTION, None)
         hival = prop_dict[prop_nm].get(HIVAL, None)

@@ -1,5 +1,9 @@
 import argparse
+
+from propargs.type import try_type_val
+
 parser = argparse.ArgumentParser(description='parse key pairs into a dictionary')
+
 
 def set_props_from_cl(prop_args):
 
@@ -11,7 +15,7 @@ def set_props_from_cl(prop_args):
     for prop_nm in cl_dict :
         arg = cl_dict[prop_nm]
         if prop_nm in prop_args:
-            arg = prop_args._try_type_val(arg, prop_args.props[prop_nm].atype)
+            arg = try_type_val(arg, prop_args.props[prop_nm].atype)
         prop_args[prop_nm] = arg
 
 

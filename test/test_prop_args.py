@@ -12,7 +12,8 @@ import json
 from unittest import mock
 from unittest.mock import patch
 from propargs import propargs as pa, data_store, env, property_dict, command_line, user
-from propargs.constants import PROPS_DIR, AutoLoadProp, FLT, INT, CMPLX, STR, BOOL
+from propargs.constants import *
+from propargs.type import try_type_val
 
 DUMMY_PROP_NM = "dummy_prop"
 ANSWERS_FOR_INPUT_PROMPTS = [1]
@@ -92,12 +93,25 @@ def test_props_set_through_prop_dict(prop_args):
     assert prop_args[DUMMY_PROP_NM] == 7
 
 
-def test_type_null_val(prop_args):
-    bool_none = prop_args._try_type_val(None, BOOL)
-    float_none = prop_args._try_type_val(None, FLT)
-    int_none = prop_args._try_type_val(None, INT)
-    string_none = prop_args._try_type_val(None, STR)
-    complex_none = prop_args._try_type_val(None, CMPLX)
+def test_type_bool_val():
+    assert try_type_val('TRUE', BOOL) is True
+    assert try_type_val('yes', BOOL) is True
+    assert try_type_val(1, BOOL) is True
+    assert try_type_val(1.0, BOOL) is True
+
+    assert try_type_val('false', BOOL) is False
+    assert try_type_val('no', BOOL) is False
+    assert try_type_val(0, BOOL) is False
+    assert try_type_val(0.1, BOOL) is False
+    assert try_type_val('abona;a;lnsbaioh', BOOL) is False
+
+
+def test_type_null_val():
+    bool_none = try_type_val(None, BOOL)
+    float_none = try_type_val(None, FLT)
+    int_none = try_type_val(None, INT)
+    string_none = try_type_val(None, STR)
+    complex_none = try_type_val(None, CMPLX)
 
     assert isinstance(bool_none, bool)
     assert bool_none is False
