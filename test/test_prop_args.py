@@ -106,6 +106,18 @@ def test_type_bool_val():
     assert try_type_val('abona;a;lnsbaioh', BOOL) is False
 
 
+def test_type_int_val():
+    assert try_type_val('2', INT) == 2
+
+
+def test_type_flt_val():
+    assert try_type_val('2.3', FLT) == 2.3
+
+
+def test_type_cmplx_val():
+    assert try_type_val('3+9j', CMPLX) == 3 + 9j
+
+
 def test_type_null_val():
     bool_none = try_type_val(None, BOOL)
     float_none = try_type_val(None, FLT)
