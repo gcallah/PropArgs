@@ -188,3 +188,14 @@ def test_singleton():
     pa.PropArgs('props2', prop_dict={'i like': {'val': 'tests that pass'}})
 
     assert pa.get_prop('i like') == 'tests that pass'
+
+
+def test_set_prop():
+    pa.PropArgs('props1', prop_dict={'i like': {'val': 'turtles'}})
+
+    assert pa.get_prop('i like') == 'turtles'
+
+    pa.set_prop('i like', 'tests that pass')
+
+    assert pa.get_prop('i like') == 'tests that pass'
+

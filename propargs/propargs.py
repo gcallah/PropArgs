@@ -3,12 +3,12 @@ prop_args2.py
 Set, read, and write program-wide properties in one location. Includes logging.
 """
 import json
+from typing import Optional
 
+from propargs.exceptions import PropsNotInitializedException
 from propargs.prop import Prop
 from propargs import data_store, env, property_dict, command_line, user
 from propargs.constants import *
-
-_the_props = None
 
 
 def get_prop(key, default_val=None):
@@ -20,6 +20,16 @@ def get_prop(key, default_val=None):
         return default_val
     else:
         return _the_props.get(key, default_val)
+
+
+def set_prop(key, val):
+    """
+    Set a property's value.
+    """
+    if _the_props is None:
+        raise PropsNotInitializedException("PropArgs not initialized yet.")
+
+    _the_props[key] = val
 
 
 class PropArgs:
@@ -75,26 +85,26 @@ class PropArgs:
         command_line.set_props_from_cl(self)
 
         if not skip_user_questions and user.can_ask_through_cl(self):
-
             # 5. Ask the user questions.
             user.ask_user_through_cl(self)
 
     def get_questions(self):
         all_props = self.to_json()
-        question_props = {key: all_props[key] for key in all_props if all_props[key]['question'] is not None }
+        question_props = {key: all_props[key] for key in all_props if
+                          all_props[key]['question'] is not None}
         return question_props
 
     def _answer_within_bounds(self, prop_nm, typed_answer):
-        if (self.props[prop_nm].atype is None 
-            or self.props[prop_nm].atype in (STR, BOOL)):
+        if (self.props[prop_nm].atype is None
+                or self.props[prop_nm].atype in (STR, BOOL)):
             return True
 
-        if (self.props[prop_nm].lowval is not None 
-            and self.props[prop_nm].lowval > typed_answer):
+        if (self.props[prop_nm].lowval is not None
+                and self.props[prop_nm].lowval > typed_answer):
             return False
 
-        if (self.props[prop_nm].hival is not None 
-            and self.props[prop_nm].hival < typed_answer):
+        if (self.props[prop_nm].hival is not None
+                and self.props[prop_nm].hival < typed_answer):
             return False
 
         return True
@@ -158,9 +168,13 @@ class PropArgs:
         f.close()
 
     def to_json(self):
-        return { prop_nm: self.props[prop_nm].to_json() for prop_nm in self.props }
+        return {prop_nm: self.props[prop_nm].to_json() for prop_nm in
+                self.props}
 
     def get(self, key, default=None):
         if key not in self.props or self.props[key].val is None:
             self.props[key] = Prop(val=default)
         return self.props[key].val
+
+
+_the_props: Optional[PropArgs] = None
