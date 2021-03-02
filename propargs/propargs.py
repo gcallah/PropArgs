@@ -177,4 +177,4 @@ class PropArgs:
         return self.props[key].val
 
 
-_the_props: Optional[PropArgs] = None
+_the_props = None
