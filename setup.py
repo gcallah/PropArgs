@@ -5,11 +5,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="propargs",
-    version="0.0.12",
+    version="0.0.16",
     author="Nathan Conroy, Gene Callahan",
     author_email="nathanconroydev@gmail.com",
-    description="A module for systematically organizing user preferences acquired "
-                "from a database, env vars, a parameter file, or user choices.",
+    description="A module for systematically organizing user preferences "
+                "acquired from a database, env vars, a parameter file, "
+                "or user choices.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/gcallah/PropArgs",

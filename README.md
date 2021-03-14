@@ -139,6 +139,22 @@ a new property will be bound to `default` (or `None` if a `default` isn't specif
     2
     >>> pa.get('newer_prop')
     None
+    
+#### Datatypes and Type Casting
+
+Each property may be given a datatype by using the "atype" property. PropArgs currently supports five datatypes:
+`"BOOL"`
+`"INT"`
+`"FLT"`
+`"CMPLX"`
+and
+`"STR"`. When PropArgs is initialized, the property value is cast to its "atype".
+For most "atype"s, this type casting is done in the usual python way. So a prop
+
+
+An "atype" of `"BOOL"` casts `"yes"` (any casing), `"true"` (any casing), and `1` to `True`. Everything else is cast to `False`.
+
+
 
 ## Credits
 Idea - Robert Dodson

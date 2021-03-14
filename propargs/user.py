@@ -1,5 +1,6 @@
 
 from propargs.constants import *
+from propargs.type import try_type_val
 
 def ask_user_through_cl(prop_args):
     for prop_nm in prop_args:
@@ -18,7 +19,7 @@ def _ask_until_correct(prop_args, prop_nm):
             return prop_args.props[prop_nm].val
 
         try:
-            typed_answer = prop_args._try_type_val(answer, atype)
+            typed_answer = try_type_val(answer, atype)
         except ValueError:
             print("Input of invalid type. Should be {atype}"
                   .format(atype=atype))
