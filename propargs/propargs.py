@@ -1,6 +1,6 @@
 """
-prop_args2.py
-Set, read, and write program-wide properties in one location. Includes logging.
+prop_args.py
+Set, read, and write program-wide properties through this module.
 """
 import json
 
