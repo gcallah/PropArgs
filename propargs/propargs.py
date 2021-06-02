@@ -137,6 +137,14 @@ class PropArgs:
         """
         if key in self:
             self.props[key].val = v
+            if isinstance(v, int):
+                self.props[key].atype = INT
+            elif isinstance(v, str):
+                self.props[key].atype = STR
+            elif isinstance(v, bool):
+                self.props[key].atype = BOOL
+            elif isinstance(v, float):
+                self.props[key].atype = FLT
         else:
             self.props[key] = Prop(val=v)
 
