@@ -6,12 +6,10 @@ parser = argparse.ArgumentParser(description='parse key pairs into a dictionary'
 
 
 def set_props_from_cl(prop_args):
-
     args, _ = parser.parse_known_args()
     cl_dict = vars(args)['my_dict']
     if not cl_dict:
         return
-
     for prop_nm in cl_dict :
         arg = cl_dict[prop_nm]
         if prop_nm in prop_args:
