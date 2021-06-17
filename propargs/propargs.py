@@ -3,6 +3,7 @@ prop_args.py
 Set, read, and write program-wide properties through this module.
 """
 import json
+import copy
 from typing import Optional
 
 from propargs.exceptions import PropsNotInitializedException
@@ -46,7 +47,7 @@ class PropArgs:
         Create a property object with values in 'props'.
         """
         if prop_dict is None:
-            prop_dict = dict()
+            prop_dict = {}
 
         pa = PropArgs(name, ds_file=ds_file, prop_dict=prop_dict,
                       skip_user_questions=skip_user_questions)
@@ -69,7 +70,9 @@ class PropArgs:
         self.name = name
         self.logfile = logfile
         self.ds_file = ds_file
-        self.props = prop_dict or dict()
+        self.props = {}
+        if isinstance(prop_dict, dict):
+            self.props = copy.deepcopy(prop_dict)
 
         # 1. The Data Store
         if self.ds_file:
