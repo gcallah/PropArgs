@@ -9,6 +9,7 @@ tests:
 	pytest
 
 package: tests
-	python setup.py sdist bdist_wheel
-	python -m twine upload dist/*
+	rm -rf dist/*
+	$(PY_EXEC) setup.py sdist bdist_wheel
+	$(PY_EXEC) -m twine upload dist/*
 
