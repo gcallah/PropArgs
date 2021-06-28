@@ -1,15 +1,13 @@
-
 from propargs.constants import *
 
 
 def try_type_val(val, atype):
-    if val is None:
-        return type_for_none[atype]
-
-    if atype in type_dict:
-        type_cast = type_dict[atype]
-        return type_cast(val)
-
+    if atype in TYPE_DICT:
+        if val is None:
+            return TYPE_FOR_NONE[atype]
+        else:
+            type_cast = TYPE_DICT[atype]
+            return type_cast(val)
     else:
         return val
 
@@ -24,5 +22,5 @@ def boolean(val):
     return bool(val)
 
 
-type_dict = {BOOL: boolean, INT: int, FLT: float, CMPLX: complex, STR: str}
-type_for_none = {BOOL: False, INT: 0, FLT: 0.0, CMPLX: 0j, STR: ''}
+TYPE_DICT = {BOOL: boolean, INT: int, FLT: float, CMPLX: complex, STR: str}
+TYPE_FOR_NONE = {BOOL: False, INT: 0, FLT: 0.0, CMPLX: 0j, STR: ''}

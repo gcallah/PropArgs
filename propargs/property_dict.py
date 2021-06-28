@@ -25,7 +25,7 @@ def set_props_from_dict(prop_args, prop_dict):
         return
 
     for prop_nm in prop_dict:
-        atype = prop_dict[prop_nm].get(ATYPE, None)
+        atype = prop_dict[prop_nm].get(ATYPE, STR)
         val = try_type_val(prop_dict[prop_nm].get(VALUE, None),
                                       atype)
         question = prop_dict[prop_nm].get(QUESTION, None)

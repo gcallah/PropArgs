@@ -47,7 +47,7 @@ def test_int_bounds(lowval, test_val, hival, expected, prop_args):
 
 def test_set_props_from_ds(prop_args):
     with mock.patch('propargs.data_store._open_file_as_json') as mock_open_file_as_json:
-        mock_open_file_as_json.return_value = json.loads('{{ "{prop_name}": {{"val": 7}} }}'.format(prop_name=DUMMY_PROP_NM))
+        mock_open_file_as_json.return_value = json.loads('{{ "{prop_name}": {{"val": 7, "atype": "INT" }} }}'.format(prop_name=DUMMY_PROP_NM))
         prop_args.ds_file = "some_file"
         data_store.set_props_from_ds(prop_args)
         assert prop_args[DUMMY_PROP_NM] == 7
@@ -86,7 +86,7 @@ def test_set_os_in_set_props_from_env(prop_args):
 
 
 def test_props_set_through_prop_dict(prop_args):
-    prop_dict = {DUMMY_PROP_NM: {"val": 7} }
+    prop_dict = {DUMMY_PROP_NM: {"val": 7, "atype": "INT"} }
     prop_args[DUMMY_PROP_NM] = 100
     property_dict.set_props_from_dict(prop_args, prop_dict)
 
